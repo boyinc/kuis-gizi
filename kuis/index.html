@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://boyinc.my.id/assets/efek-animasi/salju/styles.css">
+    <script src="https://boyinc.my.id/assets/efek-animasi/salju/snowfall.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.4/dist/sweetalert2.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://boyinc.my.id/assets/efek-animasi/snowflake/snowflake.css">
+    <link rel="icon" href="https://boyinc.my.id/assets//image/imgkuis/iconkuis.png" type="image/x-icon">
+    <meta name="keyword" content ="Family 100">
+    <meta name="description" content ="Kuis Iseng-iseng">
+    <title>Family 100</title>
+</head>
+<body onload="mulai()">
+    <style>
+    :root {
+    --warna-bg: rgba(0, 0, 0, .75); 
+    --warna-teks: white;
+    --warna-bingkai: rgba(255, 255, 255, .8);
+    --bingkai: 10px;
+    --gaya-font: 'Nunito Sans', sans-serif;
+    --gaya-font2: 'Itim', cursive;
+    margin: 0 auto;
+    }
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-image: url('https://boyinc.my.id/assets/image/bg-salju.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        min-height: 100vh; 
+    }
+    @keyframes blink {
+        0% { opacity: 1; }
+        50% { opacity: 0; }
+        100% { opacity: 1; }
+    }
+
+    /* HIDE RADIO */
+    [type=radio] {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    /* IMAGE STYLES */
+    [type=radio] + img {
+        cursor: pointer;
+    }
+
+    /* CHECKED STYLES */
+    [type=radio]:checked + img {
+        outline: 5px solid rgb(228, 221, 235);
+    }
+
+    .container {
+        margin: 0 auto;
+        max-width: 900px;
+    }
+
+    .form {
+        margin-bottom: 30px;
+        display: none;
+        background: rgba(0,0,0, .6);
+        backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
+        box-shadow: 0 4px 30px rgba(255,255,255, 0.3);
+        border: 1px solid rgba(255, 255, 255, 1);
+        border-radius: 12px;
+    }
+    .form.active {
+        display: block;
+        color: white;
+    }
+
+    .soal h4 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .jawaban {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Dua kolom */
+        gap: 20px;
+        justify-items: center;
+        align-items: center;
+        color: white;
+    }
+
+    .jawaban label {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        font-size: 16px;
+        color: white;
+    }
+
+    .jawaban img {
+        width: 150px;
+        height: 150px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        transition: transform 0.2s ease;
+    }
+
+    .jawaban img:hover {
+        transform: scale(1.1);
+    }
+    
+
+    button {
+        display: block;
+        margin: 20px auto;
+        padding: 10px 20px;
+        font-size: 18px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    #hasil {
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+        margin-top: 20px;
+    }
+    .swal2-modal > *{font-size:16px;color:white}
+    .swal2-title{line-height:1.3em;font-size:17px;text-align:center;padding:15px 30px 0 30px;}
+    .swal2-timer-progress-bar-container > *{opacity:.7;background:#00B6FF;margin:0 14px}
+    .swal2-modal{background: rgba(0,0,0, .6);backdrop-filter: blur(3px);-webkit-backdrop-filter: blur(3px);box-shadow: 0 4px 30px rgba(255,255,255, 0.3);border: 1px solid rgba(255, 255, 255, 1);border-radius: 12px;max-width:400px;top:-60px;}
+    .swal2-image{background: rgba(255, 255, 255, 0.5);box-shadow: 0 4px 30px rgba(255,255,255, 0.3);backdrop-filter: blur(5px);-webkit-backdrop-filter: blur(5px);border: 1px solid rgba(255, 255, 255, 0.3);border-radius: 50%;padding:10px;}
+    .swal2-styled.swal2-confirm, .swal2-styled.swal2-cancel{position: relative;background-color: #4839eb;color: #fff;border-radius:18px;z-index: 1;transition: all 0.2s;}
+</style>
+    <audio controls autoplay style="visibility: hidden;" loop="true" id="myAudio">
+        <source src="" type="audio/mpeg">
+        Browsermu tidak mendukung tag audio, upgrade donk!
+    </audio>
+    <div class="container" id="quiz" style="display: none;" method="POST">
+    <div id="pertanyaan1" class="form active">
+        <div class="soal">
+            <h4>1. Apa fungsi utama dari zat gizi makro dalam tubuh</h4>
+        </div>
+        <div class="jawaban">
+            <label><input type="radio" name="jwb1" value="A">A.<img src="https://boyinc.my.id/assets/image/imgkuis/energi.webp"> Menyediakan energi untuk aktivitas tubuh</label>
+            <label><input type="radio" name="jwb1" value="B">B.<img src="https://boyinc.my.id/assets/image/imgkuis/metabolisme.webp"> Mengatur proses metabolisme</label>
+            <label><input type="radio" name="jwb1" value="C">C.<img src="https://boyinc.my.id/assets/image/imgkuis/enzim.webp"> Membentuk enzim dan hormon</label>
+            <label><input type="radio" name="jwb1" value="D">D.<img src="https://boyinc.my.id/assets/image/imgkuis/vitamin.webp"> Mengoptimalkan fungsi vitamin</label>
+        </div>
+        <button class="btn btn-secondary" onclick="previousQuestion(1)">Kembali</button>
+        <button class="btn btn-primary" onclick="nextQuestion(1)">Next</button>
+    </div>
+    <div id="pertanyaan2" class="form">
+        <div class="soal">
+            <h4>2. Vitamin apa yang larut dalam lemak dan penting untuk kesehatan mata?</h4>
+        </div>
+        <div class="jawaban">
+            <label><input type="radio" name="jwb2" value="A"> A. <img src="https://boyinc.my.id/assets/image/imgkuis/vitc.webp"> Vitamin C</label>
+            <label><input type="radio" name="jwb2" value="B"> B. <img src="https://boyinc.my.id/assets/image/imgkuis/vitd.webp"> Vitamin D</label>
+            <label><input type="radio" name="jwb2" value="C"> C. <img src="https://boyinc.my.id/assets/image/imgkuis/vita.webp"> Vitamin A</label>
+            <label><input type="radio" name="jwb2" value="D"> D. <img src="https://boyinc.my.id/assets/image/imgkuis/vitb12.webp"> Vitamin B12</label>
+        </div>
+        <button class="btn btn-secondary" onclick="previousQuestion(2)">Kembali</button>
+        <button class="btn btn-primary" onclick="nextQuestion(2)">Next</button>
+    </div>
+    <div id="pertanyaan3" class="form">
+        <div class="soal">
+            <h4>3. Manakah dari berikut ini yang merupakan sumber zat besi heme?</h4>
+        </div>
+        <div class="jawaban">
+            <label><input type="radio" name="jwb3" value="A"> A. <img src="https://boyinc.my.id/assets/image/imgkuis/bayam.webp"> Bayam</label>
+            <label><input type="radio" name="jwb3" value="B"> B. <img src="https://boyinc.my.id/assets/image/imgkuis/hsapi.webp"> Hati sapi</label>
+            <label><input type="radio" name="jwb3" value="C"> C. <img src="https://boyinc.my.id/assets/image/imgkuis/almond.webp"> Kacang almond</label>
+            <label><input type="radio" name="jwb3" value="D"> D. <img src="https://boyinc.my.id/assets/image/imgkuis/kentang.webp"> Kentang</label><br>
+        </div>
+        <button class="btn btn-secondary" onclick="previousQuestion(3)">Kembali</button>
+        <button class="btn btn-success" onclick="hitung()">Finish</button>
+    </div>
+    </div>
+    <div class="kumpulan sticker" style="display: none;">
+        <img src="https://boyinc.my.id/assets/image/imgkuis/welcome.gif" alt="welcome" id="stiker1" />
+        <img src="https://boyinc.my.id/assets/image/imgkuis/quby-halo.gif" alt="halo" id="stiker2">
+        <img src="https://boyinc.my.id/assets/image/imgkuis/quby-ledek.gif" alt="hahaha" id="stiker3">
+        <img src="https://boyinc.my.id/assets/image/imgkuis/quby-no.gif" alt="no" id="stiker4">
+        <img src="https://boyinc.my.id/assets/image/imgkuis/quby-ok.gif" alt="ok" id="stiker5">
+        <img src="https://boyinc.my.id/assets/image/imgkuis/quby-tepuk.gif" alt="tepuk-tangan" id="stiker6">
+        <img src="https://boyinc.my.id/assets/image/imgkuis/quby-cubit.gif" alt="cubit" id="stiker7">
+    </div>
+    <script>
+        let user = '';
+        async function mulai(){
+            const{value: nama} = await Swal.fire({
+            title: "Selamat Datang Di Kuis Tidak Berhadiah",
+            imageUrl: '' + stiker1.src,
+            imageWidth: 100, 
+            imageHeight: 100,
+            input: "text",
+            inputLabel: "Masukkan Nama Kamu",
+            inputPlaceholder: "Nama",
+            allowOutsideClick: false,
+            inputValidator: (value) => {
+      if (!value) {
+        return "You need to write something!";
+      }
+    }
+        });
+        
+        var audio = document.getElementById("myAudio");
+            audio.src= "https://boyinc.my.id/assets/musik/Blue-Yungkai.mp3";
+            audio.load();
+            audio.play();
+        if (nama) {
+            user = nama;
+            await Swal.fire({
+            title: `Halo, ${nama}!`,
+            showConfirmButton: false, 
+            timer: 2750, 
+            timerProgressBar: true,
+            imageUrl: '' + stiker2.src,
+            imageWidth: 100, 
+            imageHeight: 100,
+        });
+        await Swal.fire({
+            title: `Kerjain kuisnya ya!`,
+            showConfirmButton: false, 
+            timer: 2750, 
+            timerProgressBar: true,
+            imageUrl: '' + stiker2.src,
+            imageWidth: 100, 
+            imageHeight: 100,
+        });
+        } document.getElementById("quiz").style.display = "block";
+    }
+    function nextQuestion(current) {
+            const currentQuestion = document.getElementById(`pertanyaan${current}`);
+            const selected = document.querySelector(`input[name="jwb${current}"]:checked`);
+
+            if (!selected) {
+                Swal.fire({
+                title: "Pilih jawaban terlebih dahulu!",
+                showConfirmButton: false, 
+                timer: 2750, 
+                timerProgressBar: true,
+                imageUrl: '' + stiker4.src,
+                imageWidth: 100, 
+                imageHeight: 100,
+            });
+                return;
+            }
+
+            const nextQuestion = document.getElementById(`pertanyaan${current + 1}`);
+            if (nextQuestion) {
+                currentQuestion.classList.remove("active");
+                nextQuestion.classList.add("active");
+            }
+        }
+        function previousQuestion(current) {
+    const currentQuestion = document.getElementById(`pertanyaan${current}`);
+    const previousQuestion = document.getElementById(`pertanyaan${current - 1}`);
+    
+    if (previousQuestion) {
+        currentQuestion.classList.remove("active");
+        previousQuestion.classList.add("active");
+    }
+}
+        function hitung(){
+            const answers = {
+                jwb1: "A",
+                jwb2: "C",
+                jwb3: "B",
+            }; 
+        
+        let score = 0;
+        const kuiz = document.getElementById("quiz");
+        for(let key in answers){
+            const selected = document.querySelector(`input[name="${key}"]:checked`);
+                if (selected && selected.value === answers[key]) {
+                    score++;
+            }
+        }
+        if (score === 1){
+            Swal.fire({
+                title: `Jangan menyerah, ${user}!, Score kamu : ${score * 33 + 1}`,
+                timer: 2750,
+                timerProgressBar: true,
+                imageUrl: '' + stiker5.src,
+                imageWidth: 100, 
+                imageHeight: 100,
+            });
+        }else if (score === 2){
+            Swal.fire({
+                title: `Lumayan juga kamu, ${user}!, Score kamu : ${score * 33 + 1}`,
+                timer: 2750,
+                timerProgressBar: true,
+                imageUrl: '' + stiker6.src,
+                imageWidth: 100, 
+                imageHeight: 100,
+            });
+        }else if (score === 3){
+            Swal.fire({
+                title: `Kamu luar biasa, ${user}!, Score kamu : ${score * 33 + 1}`,
+                timer: 2750,
+                timerProgressBar: true,
+                imageUrl: '' + stiker7.src,
+                imageWidth: 100, 
+                imageHeight: 100,
+            });
+        }
+        else if (score === 0) {
+            Swal.fire({
+                title: `Hihihi, payah kamu, ${user}!, score kamu : 0`,
+                timer: 2750,
+                timerProgressBar: true,
+                imageUrl: '' + stiker3.src,
+                imageWidth: 100, 
+                imageHeight: 100,
+            });
+        }
+        else {
+            Swal.fire({
+                title: `Hihihi, payah kamu, ${user}!, score kamu : 0`,
+                timer: 2750,
+                timerProgressBar: true,
+                imageUrl: '' + stiker3.src,
+                imageWidth: 100, 
+                imageHeight: 100,
+            });
+        }
+        fetch('save.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `user=${encodeURIComponent(user)}&score=${encodeURIComponent(score)}`
+            })
+            
+       /** if(score === 1){
+        hasil.textContent = `score anda ${score * 33}`;
+        }
+        else if(score === 2){
+        hasil.textContent = `score anda ${score * 33}`;
+        }
+        else if(score === 3){
+        hasil.textContent = `score anda 100`;
+        }
+        else {
+        hasil.textContent = `score anda 0`;
+        } **/
+    }
+    </script>
+    
+    <script src="https://boyinc.my.id/assets/efek-animasi/snowflake/snowflake.js"></script>
+    <!--
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <title>Kuis Interaktif dengan Gambar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .form {
+            display: none;
+        }
+        .form.active {
+            display: block;
+        }
+        .soal {
+            margin-bottom: 20px;
+        }
+        .jawaban {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+        }
+        .jawaban label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+        .jawaban img {
+            width: 150px;
+            height: 150px;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .jawaban img:hover {
+            transform: scale(1.1);
+        }
+        [type=radio]:checked + img {
+            border-color: #007bff;
+        }
+        button {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body onload="mulai()">
+    <div class="container">
+        <div id="pertanyaan1" class="form active">
+            <h4 class="soal">1. Apa fungsi utama dari zat gizi makro dalam tubuh?</h4>
+            <div class="jawaban">
+                <label><input type="radio" name="jwb1" value="A"><img src="https://boyinc.my.id/assets/image/imgkuis/energi.webp"> Menyediakan energi untuk aktivitas tubuh</label>
+                <label><input type="radio" name="jwb1" value="B"><img src="https://boyinc.my.id/assets/image/imgkuis/metabolisme.webp"> Mengatur proses metabolisme</label>
+                <label><input type="radio" name="jwb1" value="C"><img src="https://boyinc.my.id/assets/image/imgkuis/enzim.webp"> Membentuk enzim dan hormon</label>
+                <label><input type="radio" name="jwb1" value="D"><img src="https://boyinc.my.id/assets/image/imgkuis/vitamin.webp"> Mengoptimalkan fungsi vitamin</label>
+            </div>
+            <button class="btn btn-primary" onclick="nextQuestion(1)">Next</button>
+        </div>
+
+        <div id="pertanyaan2" class="form">
+            <h4 class="soal">2. Vitamin apa yang larut dalam lemak dan penting untuk kesehatan mata?</h4>
+            <div class="jawaban">
+                <label><input type="radio" name="jwb2" value="A"><img src="https://boyinc.my.id/assets/image/imgkuis/vitc.webp"> Vitamin C</label>
+                <label><input type="radio" name="jwb2" value="B"><img src="https://boyinc.my.id/assets/image/imgkuis/vitd.webp"> Vitamin D</label>
+                <label><input type="radio" name="jwb2" value="C"><img src="https://boyinc.my.id/assets/image/imgkuis/vita.webp"> Vitamin A</label>
+                <label><input type="radio" name="jwb2" value="D"><img src="https://boyinc.my.id/assets/image/imgkuis/vitb12.webp"> Vitamin B12</label>
+            </div>
+            <button class="btn btn-primary" onclick="nextQuestion(2)">Next</button>
+        </div>
+
+        <div id="pertanyaan3" class="form">
+            <h4 class="soal">3. Manakah dari berikut ini yang merupakan sumber zat besi heme?</h4>
+            <div class="jawaban">
+                <label><input type="radio" name="jwb3" value="A"><img src="https://boyinc.my.id/assets/image/imgkuis/bayam.webp"> Bayam</label>
+                <label><input type="radio" name="jwb3" value="B"><img src="https://boyinc.my.id/assets/image/imgkuis/hsapi.webp"> Hati sapi</label>
+                <label><input type="radio" name="jwb3" value="C"><img src="https://boyinc.my.id/assets/image/imgkuis/almond.webp"> Kacang almond</label>
+                <label><input type="radio" name="jwb3" value="D"><img src="https://boyinc.my.id/assets/image/imgkuis/kentang.webp"> Kentang</label>
+            </div>
+            <button class="btn btn-success" onclick="hitung()">Finish</button>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function mulai() {
+            Swal.fire({
+                title: "Selamat Datang!",
+                text: "Masukkan nama kamu untuk memulai.",
+                input: "text",
+                inputPlaceholder: "Nama kamu",
+                allowOutsideClick: false,
+                inputValidator: (value) => {
+                    if (!value) {
+                        return "Nama harus diisi!";
+                    }
+                }
+            }).then((result) => {
+                if (result.value) {
+                    Swal.fire(`Selamat datang, ${result.value}!`);
+                }
+            });
+        }
+
+        function nextQuestion(current) {
+            const currentQuestion = document.getElementById(`pertanyaan${current}`);
+            const selected = document.querySelector(`input[name="jwb${current}"]:checked`);
+
+            if (!selected) {
+                Swal.fire("Pilih jawaban terlebih dahulu!");
+                return;
+            }
+
+            const nextQuestion = document.getElementById(`pertanyaan${current + 1}`);
+            if (nextQuestion) {
+                currentQuestion.classList.remove("active");
+                nextQuestion.classList.add("active");
+            }
+        }
+
+        function hitung() {
+            const answers = {
+                jwb1: "A",
+                jwb2: "C",
+                jwb3: "B",
+            };
+
+            let score = 0;
+            for (let key in answers) {
+                const selected = document.querySelector(`input[name="${key}"]:checked`);
+                if (selected && selected.value === answers[key]) {
+                    score++;
+                }
+            }
+
+            Swal.fire(`Skor Anda adalah ${score * 33 + 1}!`);
+        }
+    </script>
+</body>
+</html>
+-->
+</body>
+</html>
